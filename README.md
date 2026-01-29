@@ -10,7 +10,7 @@ Manage your tasks directly from the Home Assistant To-do dashboard while keeping
 
 ## ‼️ Note
 I built this with the help of Gemini <img
-src="https://raw.githubusercontent.com/jcdietrich/ha-todo.txt/refs/heads/main/gemini.png?raw=true" width="16"/>. I make no guarentee that I will be responsive
+src="./gemini.svg" width="16"/>. I make no guarentee that I will be responsive
 to bug reports or feature requests. Pull requests will probably get more attention. 
 I will try, but I struggle with my mental health, so I make no promises.
 
