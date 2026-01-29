@@ -37,7 +37,23 @@ class TodoTxtListEntity(TodoListEntity):
         self._attr_name = name
         self._file_path = file_path
         self._attr_unique_id = f"{entry_id}_{filter_tag}" if filter_tag else entry_id
-        self._filter_tag = filter_tag.strip() if filter_tag else None
+        
+        # Parse filters
+        self._include_filters = []
+        self._exclude_filters = []
+        if filter_tag:
+            for token in filter_tag.split():
+                token = token.strip()
+                if not token:
+                    continue
+                if token.startswith("-"):
+                    # Exclude filter (remove the leading '-')
+                    exclude_val = token[1:]
+                    if exclude_val:
+                        self._exclude_filters.append(exclude_val)
+                else:
+                    self._include_filters.append(token)
+                    
         self._todotxt = TodoTxt(self._file_path)
         # We store pairs of (original_index, task) to handle filtering properly
         self._filtered_tasks: list[tuple[int, Task]] = []
@@ -55,7 +71,6 @@ class TodoTxtListEntity(TodoListEntity):
         ]
 
     def _get_due_date(self, task: Task):
-        # Manual extraction to be safe from library attribute naming issues
         match = re.search(r'due:(\d{4}-\d{2}-\d{2})', str(task))
         if match:
             try:
@@ -65,13 +80,7 @@ class TodoTxtListEntity(TodoListEntity):
         return None
 
     def _get_summary(self, task: Task):
-        # We use the full line representation but might want to strip completion marker
-        # if the library doesn't do it in .description
-        # Generally task.description is safe in standard implementations
         summary = task.description
-        
-        # If the library strips priority/creation date from description, re-add them
-        # (This logic was already present and seems okay, keeping it)
         if task.priority:
             summary = f"({task.priority}) {summary}"
         if task.creation_date:
@@ -84,26 +93,54 @@ class TodoTxtListEntity(TodoListEntity):
                 pass
         self._todotxt.parse()
         
-        # Apply filtering and sorting
         all_tasks = list(enumerate(self._todotxt.tasks))
         
         # 1. Filter
-        if self._filter_tag:
-            all_tasks = [
-                (i, t) for i, t in all_tasks 
-                if str(t) and self._filter_tag in str(t)
-            ]
-        else:
-            all_tasks = [(i, t) for i, t in all_tasks if str(t) and str(t).strip()]
+        filtered_list = []
+        for i, t in all_tasks:
+            task_str = str(t)
+            if not task_str or not task_str.strip():
+                continue
+            
+            # Helper to check if a specific word exists in the task string
+            # We use regex \b to match word boundaries, allowing for punctuation
+            # Escaping the token is crucial to handle +, @, etc.
+            def has_token(token, text):
+                # We want +Project to match +Project but NOT +Project2
+                # \b works well for words, but + and @ are non-word chars in regex usually
+                # So \b+Project\b might not work as expected because + isn't a word char.
+                # Instead, we split by whitespace and check exact matches,
+                # removing common trailing punctuation if needed.
+                tokens = text.split()
+                clean_tokens = [tok.strip(".,;:?!()") for tok in tokens]
+                return token in tokens or token in clean_tokens
+
+            # Check inclusions (must match ALL)
+            matches_all_includes = True
+            for inc in self._include_filters:
+                if not has_token(inc, task_str):
+                    matches_all_includes = False
+                    break
+            if not matches_all_includes:
+                continue
+
+            # Check exclusions (must match NONE)
+            matches_any_exclude = False
+            for exc in self._exclude_filters:
+                if has_token(exc, task_str):
+                    matches_any_exclude = True
+                    break
+            if matches_any_exclude:
+                continue
+                
+            filtered_list.append((i, t))
 
         # 2. Sort
-        # Priority: Incomplete -> Priority (A-Z) -> Due Date -> Creation Date
         def sort_key(item):
             idx, task = item
             is_done = 1 if task.is_completed else 0
             priority = task.priority if task.priority else "Z"
             
-            # Manual extraction for sorting key
             due_str = "9999-12-31"
             match = re.search(r'due:(\d{4}-\d{2}-\d{2})', str(task))
             if match:
@@ -112,8 +149,8 @@ class TodoTxtListEntity(TodoListEntity):
             created = task.creation_date.isoformat() if task.creation_date else "0000-01-01"
             return (is_done, priority, due_str, created)
 
-        all_tasks.sort(key=sort_key)
-        self._filtered_tasks = all_tasks
+        filtered_list.sort(key=sort_key)
+        self._filtered_tasks = filtered_list
 
     def _write_file(self):
         self._todotxt.save()
@@ -125,9 +162,11 @@ class TodoTxtListEntity(TodoListEntity):
         creation_date = datetime.date.today().isoformat()
         line = f"{creation_date} {item.summary}"
         
-        # If filtering is active, ensure the tag is in the new item
-        if self._filter_tag and self._filter_tag not in line:
-            line += f" {self._filter_tag}"
+        # Auto-append only INCLUSION filters
+        current_tokens = line.split()
+        for inc in self._include_filters:
+            if inc not in current_tokens:
+                line += f" {inc}"
             
         if item.due:
             if f"due:{item.due.isoformat()}" not in line:
@@ -140,7 +179,6 @@ class TodoTxtListEntity(TodoListEntity):
         await self.async_update()
 
     async def async_update_todo_item(self, item: TodoItem) -> None:
-        # UID is the original index in self._todotxt.tasks
         idx = int(item.uid)
         if 0 <= idx < len(self._todotxt.tasks):
             original_task = self._todotxt.tasks[idx]
@@ -150,9 +188,11 @@ class TodoTxtListEntity(TodoListEntity):
             if item.due:
                 new_line += f" due:{item.due.isoformat()}"
             
-            # Ensure filter tag is preserved if it was forced
-            if self._filter_tag and self._filter_tag not in new_line:
-                new_line += f" {self._filter_tag}"
+            # Ensure inclusion filters are preserved if forced
+            new_tokens = new_line.split()
+            for inc in self._include_filters:
+                if inc not in new_tokens:
+                    new_line += f" {inc}"
 
             new_task = Task()
             new_task.parse(new_line)

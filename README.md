@@ -93,5 +93,28 @@ You can mix and match! For example, keep your work tasks separate but filter you
 2.  **Personal (All)**: Path: `/config/personal.txt`
 3.  **Personal (Groceries)**: Path: `/config/personal.txt`, Filter: `@Store`
 
+## 🛠️ Development
+
+If you'd like to contribute to this project, here's how to set up your development environment.
+
+### Prerequisites
+- Python 3.11+
+- Dependencies: `pip install pytodotxt voluptuous`
+
+### Running Tests
+We use `unittest` for testing the core logic and integration components.
+
+```bash
+# Run all tests
+python3 -m unittest discover tests
+
+# Run tests with coverage
+pip install coverage
+coverage run -m unittest discover tests
+coverage report -m
+```
+
+The tests mock the Home Assistant environment, so they can be run locally without a full Home Assistant installation.
+
 ## Credits
 Built using the [pytodotxt](https://github.com/vonshednob/pytodotxt) library.

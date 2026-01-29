@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv
+venv/
+ENV/
+
+# Testing
+.coverage
+htmlcov/
+mock.txt
+debug_filter.py
+
+# OS
+.DS_Store
