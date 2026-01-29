@@ -9,8 +9,8 @@ A full-featured Home Assistant integration for [todo.txt](http://todotxt.org/) f
 Manage your tasks directly from the Home Assistant To-do dashboard while keeping your data in a simple, portable, and standard-compliant text file.
 
 ## ‼️ Note
-I built this with the help of Gemini <img
-src="./gemini.svg" width="16"/>. I make no guarentee that I will be responsive
+I built this with the help of Gemini<img
+src="./gemini.svg" width="20"/>. I make no guarentee that I will be responsive
 to bug reports or feature requests. Pull requests will probably get more attention. 
 I will try, but I struggle with my mental health, so I make no promises.
 
