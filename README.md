@@ -74,10 +74,24 @@ This component pairs perfectly with Syncthing.
 4.  Enjoy seamless sync across all devices!
 
 ### Multiple Lists
-You can add this integration multiple times!
+The integration is extremely flexible. You can add it multiple times to support different workflows:
+
+#### Separate Files
+Create independent lists pointing to different physical files:
+*   **Personal**: Path: `/config/personal.txt`
+*   **Work**: Path: `/config/work.txt`
+
+#### One File, Multiple Views
+Create filtered views of the same master file:
 1.  **Master List**: Path: `/config/todo.txt`, Filter: *(blank)*
-2.  **Work List**: Path: `/config/todo.txt`, Filter: `+Work`
-3.  **Groceries**: Path: `/config/todo.txt`, Filter: `@Store`
+2.  **Work Projects**: Path: `/config/todo.txt`, Filter: `+Work`
+3.  **Shopping Context**: Path: `/config/todo.txt`, Filter: `@Store`
+
+#### Mixed Usage
+You can mix and match! For example, keep your work tasks separate but filter your main personal file:
+1.  **Work (File)**: Path: `/config/work_tasks.txt`
+2.  **Personal (All)**: Path: `/config/personal.txt`
+3.  **Personal (Groceries)**: Path: `/config/personal.txt`, Filter: `@Store`
 
 ## Credits
 Built using the [pytodotxt](https://github.com/vonshednob/pytodotxt) library.
