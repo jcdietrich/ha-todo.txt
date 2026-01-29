@@ -30,6 +30,8 @@ I will try, but I struggle with my mental health, so I make no promises.
 ## 🚀 Installation
 
 ### Option 1: HACS (Recommended)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://img.shields.io/badge/HACS-Add%20Repository-orange.svg?style=for-the-badge)](https://my.home-assistant.io/redirect/hacs_repository/?owner=jcdietrich&repository=ha-todo.txt&category=integration)
+
 1.  Open HACS in Home Assistant.
 2.  Go to "Integrations" > Top right menu > "Custom repositories".
 3.  Add this repository URL and select category **Integration**.
