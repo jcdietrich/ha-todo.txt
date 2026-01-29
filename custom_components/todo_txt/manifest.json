@@ -1,0 +1,12 @@
+{
+  "domain": "todo_txt",
+  "name": "Todo.txt",
+  "codeowners": [],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/todotxt/todo.txt",
+  "iot_class": "local_polling",
+  "logbook": true,
+  "requirements": ["pytodotxt==1.5.0"],
+  "version": "1.0.0"
+}

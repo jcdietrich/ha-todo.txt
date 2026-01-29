@@ -1,0 +1,33 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "data": {
+          "name": "Name",
+          "file_path": "File path (e.g., /config/todo.txt)",
+          "filter": "Filter (optional, e.g. +Project or @Context)"
+        },
+        "description": "Enter the path to your todo.txt file. You can optionally filter this list by a specific project or context."
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect",
+      "invalid_auth": "Invalid authentication",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "Service is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "name": "Name",
+          "file_path": "File path",
+          "filter": "Filter"
+        }
+      }
+    }
+  }
+}
