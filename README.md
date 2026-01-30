@@ -1,16 +1,13 @@
 # Todo.txt for Home Assistant
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/jcd/ha-todo.txt)
-![GitHub downloads](https://img.shields.io/github/downloads/jcd/ha-todo.txt/total)
-
-<img src="./logo.svg" width="100" />
+<img src="https://raw.githubusercontent.com/jcdietrich/ha-todo.txt/refs/heads/main/logo.svg?raw=true" width="100" />
 A full-featured Home Assistant integration for [todo.txt](http://todotxt.org/) files. 
 
 Manage your tasks directly from the Home Assistant To-do dashboard while keeping your data in a simple, portable, and standard-compliant text file.
 
 ## ‼️ Note
 I built this with the help of Gemini<img
-src="./gemini.svg" width="20"/>. I make no guarentee that I will be responsive
+src="https://raw.githubusercontent.com/jcdietrich/ha-todo.txt/refs/heads/main/gemini.svg?raw=true" width="20"/>. I make no guarentee that I will be responsive
 to bug reports or feature requests. Pull requests will probably get more attention. 
 I will try, but I struggle with my mental health, so I make no promises.
 
